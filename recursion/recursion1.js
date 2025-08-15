@@ -21,6 +21,19 @@ function fibonacci(n){
      return n <= 2 ? 1 : fibonacci(n-1) + fibonacci(n-2);   
 }
 
+
+function fiboArr(n){
+    let arr = [];
+    let conteo = 1;
+    while( conteo <= n)
+    {  
+        arr.push(fibonacci(conteo));
+        conteo++;
+    }
+    return(arr);
+}
+console.log(fiboArr(7));
+
 function fib(n) {
   let a = 1;
   let b = 1;
@@ -107,4 +120,3 @@ function collatz(n){
         return base*power(base,pow - 1);
     }
  }
- console.log(power(3,7));
