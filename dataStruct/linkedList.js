@@ -171,10 +171,7 @@ lista.append(4);
 
 lista.insertAt(10,2);
 lista.toString();
-lista.removeAt(4
-
-);
-
+lista.insertAt(20,4)
 lista.toString();
 
 
