@@ -1,14 +1,10 @@
 function mergeRec(arr)
-{   if(arr.length == 1){return arr;}
+{   if(arr.length <= 1){return arr;}
     let mitad = Math.floor(arr.length/2);
     let left = arr.slice(0,mitad);
     let right = arr.slice(mitad);
-    console.log("izq: " + left);
-    console.log("der: " + right);
-
     left = mergeRec(left);
     right = mergeRec(right);
-
     return merge(left,right);
 }
 

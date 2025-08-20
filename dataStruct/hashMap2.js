@@ -63,8 +63,9 @@ class MyHashTable{
     // agregar calve-valor
     set(key,value){
         let hashCode = this.hash(key);
-           this.ocupados ++;
-           if (this.ocupados / this.capacity >= this.loadFactor){this.growth()};
+        this.hashArr[hashCode].add(key,value);
+        this.ocupados ++;
+           //if (this.ocupados / this.capacity >= this.loadFactor){this.growth()};
     }
     //hacer resize cuando empieza  collisionar mucho
     growth(){
@@ -98,13 +99,8 @@ class MyHashTable{
             let i = 0;
            this.hashArr.forEach(function(a){
             let aux = a;
-            console.log(aux);
-            while(aux){
-                
-               
-                aux = aux.next;
-                
-            }
+            a.print();
+            
              i++; console.log(i);})
         }
 
@@ -125,8 +121,13 @@ test.set("seis",2);
 test.set("siete",2);
 test.set("ocho",2);
 test.set("nueve",2);
-
+test.set("diez",2);
 test.set("once",2);
+test.set("doce",2);test.set("siete",2);
+test.set("trece",2);
+test.set("catorce",2);
+test.set("quince",2);
+test.set("diesiceis",2);
 
 
 test.printHash();
