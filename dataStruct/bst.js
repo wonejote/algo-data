@@ -120,7 +120,7 @@ class BST{
     if (start > end) {return null;}
 
     // Find the middle element
-    let mid = (start + end) / 2;
+    let mid = Math.floor((start + end) / 2);
 
     // Create root node
     this.add(arr[mid]);
@@ -147,9 +147,51 @@ class BST{
     this.sortTree(root.rightLeaf)
             
   }
-  
 
- }
+  delete(value, root = this.root) {
+    if (root === null) return null;
+
+    // Buscar en el subárbol izquierdo
+    if (value < root.value) {
+        root.leftLeaf = this.delete(value, root.leftLeaf);
+    }
+    // Buscar en el subárbol derecho
+    else if (value > root.value) {
+        root.rightLeaf = this.delete(value, root.rightLeaf);
+    }
+    // Encontramos el nodo a borrar
+    else {
+        // Caso 0 hijos
+        if (root.leftLeaf === null && root.rightLeaf === null) {
+            if (root === this.root) this.root = null;
+            return null;
+        }
+        // Caso 1 hijo
+        if (root.leftLeaf === null) {
+            if (root === this.root) this.root = root.rightLeaf;
+            return root.rightLeaf;
+        }
+        if (root.rightLeaf === null) {
+            if (root === this.root) this.root = root.leftLeaf;
+            return root.leftLeaf;
+        }
+        // Caso 2 hijos
+        let minNode = this.findMin(root.rightLeaf);
+        root.value = minNode.value;
+        root.rightLeaf = this.delete(minNode.value, root.rightLeaf);
+    }
+
+    return root;
+}
+
+findMin(root) {
+    while (root.leftLeaf !== null) {
+        root = root.leftLeaf;
+    }
+    return root;
+}
+
+}
 
 
 
@@ -158,12 +200,16 @@ class BST{
 
 let arbol = new BST();
 
-arbol.add([1,2,3,4,5,6,7]);
-arbol.prettyPrint();
-//arbol.balance();
-arbol.prettyPrint();
+arbol.add([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,21,22]);
 
-arbol.preOrder();
 
-console.log("ojalá: ")
-arbol.inOrder();
+
+
+
+arbol.balance();
+
+
+
+
+arbol.delete(21);
+arbol.prettyPrint();
