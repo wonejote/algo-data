@@ -63,75 +63,121 @@ class MyHashTable{
     // agregar calve-valor
     set(key,value){
         let hashCode = this.hash(key);
-        this.hashArr[hashCode].add(key,value);
+        let bucket = this.hashArr[hashCode];
+        let aux = bucket.head;
+        while (aux) {
+        if (aux.key === key) {
+            aux.value = value; 
+            return;            
+        }
+        aux = aux.next;
+        }
+
+        bucket.add(key,value);
         this.ocupados ++;
-           //if (this.ocupados / this.capacity >= this.loadFactor){this.growth()};
+        if (this.ocupados / this.capacity >= this.loadFactor){this.growth()};
     }
     //hacer resize cuando empieza  collisionar mucho
     growth(){
        
         let newArr = new MyHashTable(this.capacity*2);
-        console.log(newArr.capacity);
-        
-        this.hashArr.forEach(function(a){
-            let aux = a.head;
+        this.hashArr.forEach(bucket => {
+            let aux = bucket.head;
             while(aux){
-                newArr.set(aux.key,aux.value);
-                aux = aux.next;
+                if (aux.key != null){
+                
+                newArr.set(aux.key, aux.value);
+                aux = aux.next;}
             }
         })
-        this.capacity *= 2;
+        this.capacity = newArr.capacity;
         this.hashArr = newArr.hashArr;
        
     }
     get(key){
-        if (this.hashArr[this.hash(key)] != null)
+        let hashCode = this.hash(key);
+        if (this.hashArr[hashCode].head != null)
         {
-            let val = this.hashArr[this.hash(key)];
-            console.log(val);
-            return val;
+            let aux = this.hashArr[hashCode].head;
+            while(aux){
+                if (aux.key === key){ return aux.value;}
+                aux = aux.next
+            }
         }
+        return null;
     }
 
     printHash(){
 
         
             let i = 0;
-           this.hashArr.forEach(function(a){
-            let aux = a;
-            a.print();
-            
-             i++; console.log(i);})
+           this.hashArr.forEach((bucket,i) =>{
+               process.stdout.write(`Bucket ${i}: `);
+        bucket.print();})
+        }
+    clear()
+    {
+        
+        this.capacity = 16
+        this.loadFactor = 0.75;
+        this.hashArr = new Array(this.capacity).fill(0).map(a => new HashList);
+        this.ocupados = 0;
+    }
+    borrar(key){
+    let hashCode = this.hash(key);
+    let bucket = this.hashArr[hashCode];
+    let aux = bucket.head;
+    let prev = null;
+
+    while (aux) {
+        if (aux.key === key) {
+            if (prev === null) {
+                bucket.head = aux.next;
+                if (aux === bucket.tail) {
+                    bucket.tail = null;
+                }
+            } else {
+                // "Saltar" el nodo actual
+                prev.next = aux.next;
+                if (aux === bucket.tail) {
+                    bucket.tail = prev; // si era el último
+                }
+            }
+
+            this.ocupados--;   // actualizamos contador
+            return true;       // borrado con éxito
         }
 
+        prev = aux;
+        aux = aux.next;
+    }
 
+    return false; 
+}
 
 
 }
- const test = new MyHashTable() 
 
+const tabla = new MyHashTable(4); // pequeña capacidad inicial para forzar growth rápido
 
+// 🔹 Insertar elementos
+tabla.set("uno", 1);
+tabla.set("dos", 2);
+tabla.set("tres", 3);
+tabla.set("cuatro", 4);
 
-test.set("uno",2);
-test.set("dos",2);
-test.set("tres",2);
-test.set("cuatro",2);
-test.set("cinco",2);
-test.set("seis",2);
-test.set("siete",2);
-test.set("ocho",2);
-test.set("nueve",2);
-test.set("diez",2);
-test.set("once",2);
-test.set("doce",2);test.set("siete",2);
-test.set("trece",2);
-test.set("catorce",2);
-test.set("quince",2);
-test.set("diesiceis",2);
+// 🔹 Actualizar valor de una clave existente
+tabla.set("tres", 33);
 
+// 🔹 Más inserciones para forzar growth
+tabla.set("cinco", 5);
+tabla.set("seis", 6);
+tabla.set("siete", 7);
+tabla.set("ocho", 8);
 
-test.printHash();
+// 🔹 Obtener algunos valores
+console.log("get('uno') =", tabla.get("uno"));       // 1
+console.log("get('tres') =", tabla.get("tres"));     // 33 (actualizado)
+console.log("get('diez') =", tabla.get("diez"));     //
 
-          
-
-           
+console.log(tabla.ocupados);
