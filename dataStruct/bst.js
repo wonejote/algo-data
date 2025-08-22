@@ -3,13 +3,13 @@ class Node{
         this.value = value;
         this.leftLeaf = null;
         this.rightLeaf = null;
-        this.balanced = [];
     }
 }
 
 class BST{
     constructor(){
         this.root = null;
+        this.cola = [];
     }
 
     add(value){
@@ -115,27 +115,21 @@ class BST{
     this.sortedArrayToBST(this.balanced);
   }
 
-  // Recursive function to construct BST
    sortedArrayToBSTRecur(arr, start, end) {
     if (start > end) {return null;}
 
-    // Find the middle element
     let mid = Math.floor((start + end) / 2);
 
-    // Create root node
     this.add(arr[mid]);
-
-    // Create left subtree
     this.sortedArrayToBSTRecur(arr, start, mid - 1);
 
-    // Create right subtree
     this.sortedArrayToBSTRecur(arr, mid + 1, end);
 
-}
+   }
 
  sortedArrayToBST(arr) {
     this.sortedArrayToBSTRecur(arr, 0, arr.length - 1);
-}
+  }
 
   sortTree(root = this.root){
     if(root === null){return;}
@@ -151,16 +145,16 @@ class BST{
   delete(value, root = this.root) {
     if (root === null) return null;
 
-    // Buscar en el subárbol izquierdo
     if (value < root.value) {
         root.leftLeaf = this.delete(value, root.leftLeaf);
     }
-    // Buscar en el subárbol derecho
+    
     else if (value > root.value) {
         root.rightLeaf = this.delete(value, root.rightLeaf);
     }
-    // Encontramos el nodo a borrar
-    else {
+
+    else // si llega a este else, se encontró el nodo a borrar
+        {
         // Caso 0 hijos
         if (root.leftLeaf === null && root.rightLeaf === null) {
             if (root === this.root) this.root = null;
@@ -182,14 +176,66 @@ class BST{
     }
 
     return root;
-}
+ }
 
-findMin(root) {
+ findMin(root) {
     while (root.leftLeaf !== null) {
         root = root.leftLeaf;
     }
     return root;
+  }
+
+
+  bfs(root = this.root) {
+    if (!root) return;
+    let queue = [];
+    
+    queue.push(root);
+    
+
+    while (queue.length > 0) {
+        let current = queue.shift();
+        console.log(current.value);
+        
+        if (current.leftLeaf) {queue.push(current.leftLeaf); }
+        if (current.rightLeaf) {queue.push(current.rightLeaf);}
+    
+    }
+    
 }
+  bfsPorNiveles(root = this.root) {
+    if (!root) return;
+
+    let queue = [root];
+    let niveles = [];
+
+    while (queue.length > 0) {
+        let nivel = [];
+        let size = queue.length; // nodos en este nivel
+
+        for (let i = 0; i < size; i++) {
+            let current = queue.shift();
+            nivel.push(current.value);
+
+            if (current.leftLeaf) queue.push(current.leftLeaf);
+            if (current.rightLeaf) queue.push(current.rightLeaf);
+        }
+
+        niveles.push(nivel);
+    }
+
+    console.log(niveles);
+    return niveles;
+  }
+
+  MaxDepth(root = this.root){
+    if (root === null){return 0;}
+
+    let left = this.MaxDepth(root.leftLeaf);
+    let right = this.MaxDepth(root.rightLeaf);
+    return 1 + Math.max(left, right);
+  }
+ 
 
 }
 
@@ -200,7 +246,7 @@ findMin(root) {
 
 let arbol = new BST();
 
-arbol.add([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,21,22]);
+arbol.add([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]);
 
 
 
@@ -213,3 +259,8 @@ arbol.balance();
 
 arbol.delete(21);
 arbol.prettyPrint();
+
+arbol.bfs();
+arbol.bfsPorNiveles();
+
+console.log(arbol.MaxDepth());
