@@ -236,6 +236,20 @@ class BST{
     return 1 + Math.max(left, right);
   }
  
+  invertTree(root = this.root) {
+    if (root === null) return null;
+
+    // Intercambiar los hijos
+    let temp = root.leftLeaf;
+    root.leftLeaf = root.rightLeaf;
+    root.rightLeaf = temp;
+
+    // Invertir los subárboles
+    this.invertTree(root.leftLeaf);
+    this.invertTree(root.rightLeaf);
+
+    return root;
+}
 
 }
 
@@ -255,12 +269,9 @@ arbol.add([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]);
 arbol.balance();
 
 
-
-
-arbol.delete(21);
 arbol.prettyPrint();
 
-arbol.bfs();
-arbol.bfsPorNiveles();
+arbol.invertTree();
 
-console.log(arbol.MaxDepth());
+arbol.prettyPrint();
+
